@@ -30,11 +30,27 @@ public class UserServices {
 		return userRepository.insert(user);
 	}
 	
-	public User fromDTO(UserDTO userDto) {
-		return new User(userDto.getId(), userDto.getName(),userDto.getEmail());
-	}
 	public void delete(String id) {
 		findById(id);
 		userRepository.deleteById(id);
+	}
+	
+	public User update(String id, User user) {
+		
+		User entity = userRepository.findById(id)
+	            .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado!"));
+		updateData(entity, user);
+		return userRepository.save(entity);
+		
+	}
+	
+	private void updateData(User newUser, User user) {
+		newUser.setName(user.getName());
+		newUser.setEmail(user.getEmail());
+
+	}
+
+	public User fromDTO(UserDTO userDto) {
+		return new User(userDto.getId(), userDto.getName(),userDto.getEmail());
 	}
 }
